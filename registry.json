@@ -1,0 +1,44 @@
+{
+  "modules": [
+    {
+      "id": "kuma-module-exam-cepe",
+      "name": "Examens CEPE/BEPC (Côte d'Ivoire)",
+      "version": "1.0.0",
+      "category": "academic",
+      "country": "CI",
+      "target": "primary",
+      "contract": "v1",
+      "repository": "https://github.com/perissosdigitalsolution-oss/kuma-module-exam-cepe",
+      "description": "Banque d'épreuves, bulletins blancs et prédicteurs de réussite pour les examens nationaux CEPE et BEPC. Bridge mode vers les notes du core.",
+      "tags": [
+        "exam",
+        "cepe",
+        "bepc",
+        "questions",
+        "statistics",
+        "prediction"
+      ],
+      "capabilities": {
+        "hasBridgeMode": true,
+        "hasExamBank": true,
+        "hasWhiteBulletins": true,
+        "hasSuccessPredictor": true,
+        "supportsPdfGeneration": true,
+        "standaloneSupported": true
+      },
+      "bridgeRoutes": {
+        "statistics": "POST /api/v1/modules/exam/v1/compute-predictions"
+      },
+      "coreTables": {
+        "read": [
+          "grades",
+          "students",
+          "classes"
+        ]
+      },
+      "releaseDate": "2026-11-04T12:45:00.000Z",
+      "author": "perissosdigitalsolution-oss",
+      "license": "MIT"
+    }
+  ]
+}

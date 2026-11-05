@@ -1,0 +1,56 @@
+{
+  "id": "kuma-module-exam-cepe",
+  "name": "KUMA Module — Examens CEPE/BEPC (Côte d'Ivoire) v1.0.0",
+  "version": "1.0.0",
+  "apiVersion": "v1",
+  "country": "CI",
+  "countryLabel": "Côte d'Ivoire",
+  "description": "Préparation aux examens nationaux (CEPE, BEPC) avec banque d'épreuves, bulletins blancs et statistiques de réussite. Module autonome avec bridge mode vers les notes du core.",
+  "mountPath": "/api/v1/modules/exam",
+  "entry": {
+    "server": "server/examModule.ts",
+    "standalone": "server/standalone/index.ts",
+    "frontend": "frontend/ExamPreparationCenter.tsx",
+    "schema": "server/schema.sql"
+  },
+  "requires": {
+    "hono": ">=4.0.0",
+    "d1Binding": "DB",
+    "authContextVars": [
+      "tenantId",
+      "jwtPayload"
+    ]
+  },
+  "permissions": {
+    "admin": [
+      "read",
+      "write",
+      "import",
+      "delete"
+    ],
+    "teacher": [
+      "read",
+      "write",
+      "evaluate"
+    ],
+    "student": [
+      "read_own"
+    ],
+    "parent": [
+      "read_own"
+    ]
+  },
+  "capabilities": {
+    "hasBridgeMode": true,
+    "hasExamBank": true,
+    "hasWhiteBulletins": true,
+    "hasSuccessPredictor": true,
+    "supportsPdfGeneration": true,
+    "standaloneSupported": true
+  },
+  "dataFiles": [],
+  "compatibility": "Version API v1 stable.",
+  "author": "perissosdigitalsolution-oss",
+  "license": "MIT",
+  "repository": "https://github.com/perissosdigitalsolution-oss/kuma-module-exam-cepe"
+}
