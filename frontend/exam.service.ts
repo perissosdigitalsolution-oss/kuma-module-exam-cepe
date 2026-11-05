@@ -1,7 +1,14 @@
 // ============================================================================
 // KUMA Module: Examens — API Client Autonome
 // ============================================================================
-const DEFAULT_API_BASE = '/api/v1/modules/exam';
+function defaultApiBase(): string {
+    if (typeof window === 'undefined') return '/api/v1/modules/exam';
+    const host = window.location.hostname;
+    const isProxyServed = host === 'localhost' || host === '127.0.0.1' || host.startsWith('192.168.') || host.startsWith('10.');
+    if (isProxyServed) return '/api/v1/modules/exam';
+    return 'https://kuma-school-backend-production.kumaschool88.workers.dev/api/v1/modules/exam';
+}
+const DEFAULT_API_BASE = defaultApiBase();
 
 export const ExamService = {
     async addQuestion(data: { title: string; subject: string; gradeLevel: string; examType: string; coefficient?: number }): Promise<{ success: boolean; questionId: string }> {
