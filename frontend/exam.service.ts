@@ -47,7 +47,7 @@ export interface ExamOptions {
 
 export const ExamService = {
     async addQuestion(data: { title: string; subject: string; gradeLevel: string; examType: string; coefficient?: number }, opts?: ExamOptions): Promise<{ success: boolean; questionId: string }> {
-        const res = await fetch(`${resolveApiBase(opts?.apiBase)}/question`, {
+        const res = await fetch(`${resolveApiBase(opts?.apiBase)}/v1/question`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${resolveToken(opts?.getToken)}` },
             body: JSON.stringify(data)
@@ -61,7 +61,7 @@ export const ExamService = {
         if (filters?.grade) params.set('grade', filters.grade);
         if (filters?.type) params.set('type', filters.type);
 
-        const res = await fetch(`${resolveApiBase(opts?.apiBase)}/questions?${params}`, {
+        const res = await fetch(`${resolveApiBase(opts?.apiBase)}/v1/questions?${params}`, {
             headers: { 'Authorization': `Bearer ${resolveToken(opts?.getToken)}` }
         });
         const data = await res.json();
@@ -69,7 +69,7 @@ export const ExamService = {
     },
 
     async saveResult(data: { studentId: string; questionId: string; score: number; maxScore?: number; notes?: string }, opts?: ExamOptions): Promise<{ success: boolean; resultId: string }> {
-        const res = await fetch(`${resolveApiBase(opts?.apiBase)}/result`, {
+        const res = await fetch(`${resolveApiBase(opts?.apiBase)}/v1/result`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${resolveToken(opts?.getToken)}` },
             body: JSON.stringify(data)
@@ -91,19 +91,13 @@ export const ExamService = {
     },
 
     async getPrediction(studentId: string, opts?: ExamOptions): Promise<any> {
-        const res = await fetch(`${resolveApiBase(opts?.apiBase)}/prediction/${studentId}`, {
+        const res = await fetch(`${resolveApiBase(opts?.apiBase)}/v1/prediction/${studentId}`, {
             headers: { 'Authorization': `Bearer ${resolveToken(opts?.getToken)}` }
         });
         const data = await res.json();
         return data.success ? data.prediction : null;
     },
-
-    async computePredictions(classId: string, opts?: ExamOptions): Promise<{ success: boolean; message: string }> {
-        const res = await fetch(`${resolveApiBase(opts?.apiBase)}/compute-predictions`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${resolveToken(opts?.getToken)}` },
-            body: JSON.stringify({ classId })
-        });
-        return res.json();
-    }
+    // NOTE: the module server exposes NO '/v1/compute-predictions' route —
+    // the old frontend method called a path that could only ever 404, so it
+    // was dead code and has been removed rather than kept as a trap.
 };
