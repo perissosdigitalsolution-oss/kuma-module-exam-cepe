@@ -6,10 +6,13 @@ import { ExamService } from './exam.service';
 
 interface Props {
     lang?: 'fr' | 'en';
+    /** Explicit module API base (host injects it). */
     apiBase?: string;
+    /** Token provider (host injects it). */
+    getToken?: () => string | null;
 }
 
-export default function ExamPreparationCenter({ lang = 'fr', apiBase }: Props) {
+export default function ExamPreparationCenter({ lang = 'fr', apiBase, getToken }: Props) {
     const [loading, setLoading] = React.useState(false);
     const [message, setMessage] = React.useState<string | null>(null);
     const [statistics, setStatistics] = React.useState<any>(null);
@@ -17,7 +20,8 @@ export default function ExamPreparationCenter({ lang = 'fr', apiBase }: Props) {
     const fetchStatistics = async () => {
         setLoading(true);
         try {
-            const stats = await ExamService.getStatistics('class_001', apiBase);
+            // The 2nd positional argument is `subject`, NOT the apiBase.
+            const stats = await ExamService.getStatistics('class_001', undefined, { apiBase, getToken });
             setStatistics(stats);
         } catch (e) {
             setMessage(lang === 'fr' ? 'Erreur de chargement' : 'Load error');
@@ -31,14 +35,14 @@ export default function ExamPreparationCenter({ lang = 'fr', apiBase }: Props) {
     const handleAddQuestion = async () => {
         const title = prompt(lang === 'fr' ? 'Titre de la question:' : 'Question title:');
         if (!title) return;
-        
+
         try {
             await ExamService.addQuestion({
                 title,
                 subject: 'Mathématiques',
                 gradeLevel: 'CM2',
                 examType: 'blanc'
-            }, apiBase);
+            }, { apiBase, getToken });
             setMessage(lang === 'fr' ? 'Question ajoutée' : 'Question added');
             fetchStatistics();
         } catch (e) {
